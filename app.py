@@ -94,15 +94,53 @@ except Exception as e:
 st.markdown('<div class="main-header">Used Car Fair-Market Valuation Engine</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">Data-driven pre-owned vehicle pricing powered by regularized regression & gradient boosting pipelines</div>', unsafe_allow_html=True)
 
+# Read and sync URL Query Parameters for persistence
+qp = st.query_params
+def_brand = qp.get("brand", "Maruti")
+if def_brand not in meta["common_brands"]:
+    def_brand = "Maruti"
+
+try:
+    def_year = int(qp.get("year", 2012))
+except (ValueError, TypeError):
+    def_year = 2012
+
+try:
+    def_km = int(qp.get("km", 50000))
+except (ValueError, TypeError):
+    def_km = 50000
+
+def_fuel = qp.get("fuel", "Petrol")
+if def_fuel not in meta["fuels"]:
+    def_fuel = "Petrol"
+
+def_trans = qp.get("trans", "Automatic")
+if def_trans not in meta["transmissions"]:
+    def_trans = "Automatic"
+
+def_seller = qp.get("seller", "Dealer")
+if def_seller not in meta["seller_types"]:
+    def_seller = "Dealer"
+
+def_owner = qp.get("owner", "First Owner")
+if def_owner not in meta["owners"]:
+    def_owner = "First Owner"
+
+persona_options = [
+    "Rahul (Private Buyer)",
+    "Ananya (Private Seller)",
+    "Vikram (Dealership Manager)"
+]
+def_persona = qp.get("persona", "Rahul (Private Buyer)")
+if def_persona not in persona_options:
+    def_persona = "Rahul (Private Buyer)"
+
 # Sidebar: Persona & Model Configuration
 st.sidebar.header("🎯 Valuation Persona")
 persona = st.sidebar.radio(
     "Select Your Perspective:",
-    options=[
-        "Rahul (Private Buyer)",
-        "Ananya (Private Seller)",
-        "Vikram (Dealership Manager)"
-    ],
+    options=persona_options,
+    index=persona_options.index(def_persona),
     help="Adapts recommendations, margin buffers, and pricing strategies based on PRD User Personas."
 )
 
@@ -110,7 +148,7 @@ st.sidebar.markdown("---")
 st.sidebar.header("⚙️ Estimation Engine")
 selected_model_type = st.sidebar.selectbox(
     "Active Regression Model:",
-    ["Ridge Regression (Best Generalization & Lowest MAE)", "Gradient Boosting (Non-linear Tree Ensemble)"],
+    ["Ridge Regression (Best Generalization & Lowest MAE)", "Gradient Boosting (Non-Linear Tree Ensemble)"],
     index=0
 )
 active_pipeline = ridge_pipeline if "Ridge" in selected_model_type else gb_pipeline
@@ -124,23 +162,33 @@ with col_input:
     brand = st.selectbox(
         "Car Brand / Make",
         options=meta["common_brands"],
-        index=meta["common_brands"].index("Maruti") if "Maruti" in meta["common_brands"] else 0
+        index=meta["common_brands"].index(def_brand)
     )
     
     year_col, km_col = st.columns(2)
     with year_col:
-        year = st.slider("Manufacturing Year", min_value=1995, max_value=meta["reference_year"], value=2015, step=1)
+        year = st.slider("Manufacturing Year", min_value=1995, max_value=meta["reference_year"], value=def_year, step=1)
     with km_col:
-        km_driven = st.number_input("Kilometers Driven", min_value=100, max_value=600000, value=55000, step=2500)
+        km_driven = st.number_input("Kilometers Driven", min_value=100, max_value=600000, value=def_km, step=2500)
         
-    fuel = st.selectbox("Fuel Type", options=meta["fuels"], index=meta["fuels"].index("Petrol") if "Petrol" in meta["fuels"] else 0)
-    transmission = st.radio("Transmission", options=meta["transmissions"], horizontal=True, index=0)
+    fuel = st.selectbox("Fuel Type", options=meta["fuels"], index=meta["fuels"].index(def_fuel))
+    transmission = st.radio("Transmission", options=meta["transmissions"], horizontal=True, index=meta["transmissions"].index(def_trans))
     
     seller_col, owner_col = st.columns(2)
     with seller_col:
-        seller_type = st.selectbox("Seller Category", options=meta["seller_types"], index=0)
+        seller_type = st.selectbox("Seller Category", options=meta["seller_types"], index=meta["seller_types"].index(def_seller))
     with owner_col:
-        owner = st.selectbox("Ownership History", options=meta["owners"], index=0)
+        owner = st.selectbox("Ownership History", options=meta["owners"], index=meta["owners"].index(def_owner))
+
+# Automatically update URL parameters so any bookmark or link retains exact user state
+st.query_params["brand"] = brand
+st.query_params["year"] = str(year)
+st.query_params["km"] = str(km_driven)
+st.query_params["fuel"] = fuel
+st.query_params["trans"] = transmission
+st.query_params["seller"] = seller_type
+st.query_params["owner"] = owner
+st.query_params["persona"] = persona
 
 # Feature engineering for inference
 car_age = meta["reference_year"] - year
