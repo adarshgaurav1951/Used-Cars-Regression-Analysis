@@ -1,5 +1,13 @@
 # Used Car Price Prediction & Regression Valuation Engine
 
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Pandas](https://img.shields.io/badge/pandas-2.0+-150458.svg)](https://pandas.pydata.org/)
+[![Status](https://img.shields.io/badge/Status-Data%20Cleaning%20Complete-brightgreen.svg)]()
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adarshgaurav1951/Used-Cars-Regression-Analysis/blob/main/used_car_price.ipynb)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](http://localhost:8501)
+[![Host Dashboard](https://img.shields.io/badge/Host%20Dashboard-localhost%3A8501-FF4B4B?style=flat&logo=streamlit&logoColor=white)](http://localhost:8501)
+
 An end-to-end Machine Learning regression project and interactive valuation application developed according to the specifications in [prd.md](prd.md). The system estimates pre-owned car fair market prices in Indian Rupees (₹), analyzes depreciation curves, and provides strategic pricing recommendations for buyers, sellers, and dealership appraisers.
 
 ---
@@ -174,7 +182,7 @@ source venv/bin/activate
 ```bash
 ./venv/bin/streamlit run app.py
 ```
-Open your browser at `http://localhost:8501` to use the interactive price estimator.
+Open **[http://localhost:8501](http://localhost:8501)** in your browser or click [![Host Dashboard](https://img.shields.io/badge/Host%20Dashboard-localhost%3A8501-FF4B4B?style=flat&logo=streamlit&logoColor=white)](http://localhost:8501) to use the interactive price estimator.
 
 ### 3. View the Notebook
 Open [used_car_price.ipynb](used_car_price.ipynb) in Antigravity or VS Code using the `Python (used-cars venv)` kernel to explore the 10 analysis sections, visualizations, and statistical findings.
