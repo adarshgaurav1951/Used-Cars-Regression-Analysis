@@ -4,6 +4,83 @@ An end-to-end Machine Learning regression project and interactive valuation appl
 
 ---
 
+## 🗺️ End-to-End Pipeline Architecture
+
+![Machine Learning Pipeline Architecture](assets/ml_project_workflow.jpg)
+
+### 🎯 Main Goal of this Project
+In the used car marketplace, neither buyers nor sellers have complete transparency over fair vehicle value. Price depends heavily on coupled interactions between continuous attributes (vehicle age, odometer mileage, annual usage intensity) and categorical attributes (brand tier, fuel type, transmission mechanism, ownership status). 
+
+The primary objectives of this project are:
+1. **Accurate Valuation:** Estimate fair market values in Indian Rupees (₹) with a benchmark Mean Absolute Error (MAE) under ₹1.5 Lakhs and $R^2 \ge 0.65$.
+2. **Zero Data Leakage:** Ensure that all imputations, feature standardizations, and one-hot encodings are fitted strictly on training subsets via encapsulated scikit-learn `Pipeline` and `ColumnTransformer` objects.
+3. **Transparent Explainability:** Identify the dominant economic depreciation factors and quantify how much specific upgrades (e.g., Automatic transmission vs. Manual) impact vehicle resale.
+4. **Actionable Decision Support:** Deploy an interactive, persona-tailored valuation interface for private buyers, individual sellers, and dealership inventory managers.
+
+---
+
+### 🏗️ How the Project Was Built from Start to End
+
+```mermaid
+graph LR
+    A["1. Data Ingestion<br/>(car_data.csv)"] --> B["2. Data Cleansing<br/>(Drop Duplicates & Anomalies)"]
+    B --> C["3. Exploratory Data Analysis<br/>(Distributions & Box Plots)"]
+    C --> D["4. Feature Engineering<br/>(car_age, brand, km_per_year, log_price)"]
+    D --> E["5. Leak-Free Preprocessing<br/>(StandardScaler & OneHotEncoder)"]
+    E --> F["6. Multi-Model Regression<br/>(Linear, Ridge, RF, Gradient Boosting)"]
+    F --> G["7. Evaluation & Interpretation<br/>(R2, MAE in Rupees, Feature Importance)"]
+    G --> H["8. Serialization & Deployment<br/>(Joblib & Streamlit Web App)"]
+```
+
+#### Detailed Breakdown by Stage:
+
+1. **Data Ingestion & Initial Inspection:**
+   - **Library:** `pandas`
+   - **Functions:** `pd.read_csv("car_data.csv")`, `df.shape`, `df.info()`, `df.describe()`, `df.isnull().sum()`
+   - **Goal:** Ingest 4,340 raw used-car listings and audit data hygiene without altering the original CSV file.
+
+2. **Data Cleaning & Anomaly Resolution:**
+   - **Library:** `pandas`
+   - **Functions:** `df.drop_duplicates()`, boolean masking (`df["km_driven"] >= 100`)
+   - **Goal:** Removed 763 duplicate listings (17.6%) that would artificially weight training samples. Filtered an erroneous listing with 1 km recorded on a 2014 car. Preserved genuine high-end luxury listings.
+
+3. **Exploratory Data Analysis (EDA):**
+   - **Libraries:** `matplotlib.pyplot`, `seaborn`, `numpy`
+   - **Functions:** `sns.histplot()`, `sns.scatterplot()`, `sns.boxplot()`, `sns.heatmap()`, `np.log1p()`
+   - **Goal:** Uncovered severe right-skewness in raw selling prices, necessitating log-normal transformation. Revealed steep exponential depreciation over the first 5–7 years, substantial premiums for diesel and automatic transmissions, and monotonic value decline across ownership transitions.
+
+4. **Domain Feature Engineering:**
+   - **Libraries:** `pandas`, `numpy`
+   - **Functions:** `df.apply()`, string tokenization, `value_counts()`
+   - **Features Created:**
+     - `car_age = 2020 - year`: Directly models vehicle age relative to the dataset reference year.
+     - `brand`: Extracted first word from vehicle name; grouped rare brands (< 25 listings) into `"Other"`.
+     - `km_per_year = km_driven / (car_age + 1)`: Quantifies annual vehicle wear rate.
+     - `log_price = np.log1p(selling_price)`: Stabilizes regression variance.
+
+5. **Leak-Free Preprocessing Architecture:**
+   - **Library:** `scikit-learn`
+   - **Modules & Classes:** `train_test_split(random_state=42)`, `StandardScaler()`, `OneHotEncoder(drop='first', handle_unknown='ignore')`, `ColumnTransformer()`
+   - **Goal:** Partitioned data into 80% train (2,860 rows) and 20% test (716 rows). Isolated transformers inside a `ColumnTransformer` to guarantee zero test leakage.
+
+6. **Model Training & Benchmarking:**
+   - **Library:** `scikit-learn`
+   - **Pipelines & Algorithms:** `Pipeline()`, `LinearRegression()`, `Ridge(alpha=1.0)`, `RandomForestRegressor()`, `GradientBoostingRegressor()`
+   - **Goal:** Trained candidate models sequentially from unregularized baseline to regularized linear and complex tree ensembles on `(X_train, y_train_log)`.
+
+7. **Evaluation, Inversion & Explainability:**
+   - **Library:** `scikit-learn`, `numpy`
+   - **Functions:** `np.expm1()`, `r2_score()`, `mean_absolute_error()`, `root_mean_squared_error()`, `KFold()`, `cross_val_score()`
+   - **Goal:** Mapped log predictions back to Indian Rupees scale. Ridge Regression demonstrated the highest generalizability with a test $R^2 \approx 0.670$ in Rupees ($0.774$ on log scale) and lowest MAE (₹1.47 Lakhs). Extracted Gradient Boosting feature importances identifying car age and transmission type as dominant price drivers.
+
+8. **Serialization & Web Application:**
+   - **Libraries:** `joblib`, `streamlit`
+   - **Functions:** `joblib.dump()`, `joblib.load()`, `st.metric()`, `st.tabs()`, `st.image()`
+   - **Goal:** Serialized production pipelines and metadata into `models/`. Built a responsive web app with persona-based playbooks and a "what-if" valuation sensitivity simulator.
+
+---
+
+
 ## 🌟 Key Features
 
 1. **Exploratory Data Analysis & Depreciation Modeling:**
