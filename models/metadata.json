@@ -1,0 +1,96 @@
+{
+  "reference_year": 2020,
+  "common_brands": [
+    "Audi",
+    "BMW",
+    "Chevrolet",
+    "Datsun",
+    "Fiat",
+    "Ford",
+    "Honda",
+    "Hyundai",
+    "Mahindra",
+    "Maruti",
+    "Nissan",
+    "Renault",
+    "Skoda",
+    "Tata",
+    "Toyota",
+    "Volkswagen",
+    "Other"
+  ],
+  "fuels": [
+    "CNG",
+    "Diesel",
+    "Electric",
+    "LPG",
+    "Petrol"
+  ],
+  "seller_types": [
+    "Dealer",
+    "Individual",
+    "Trustmark Dealer"
+  ],
+  "transmissions": [
+    "Automatic",
+    "Manual"
+  ],
+  "owners": [
+    "First Owner",
+    "Second Owner",
+    "Third Owner",
+    "Fourth & Above Owner",
+    "Test Drive Car"
+  ],
+  "metrics": {
+    "Ridge": {
+      "r2": 0.7054,
+      "mae": 141866.24,
+      "rmse": 313175.58
+    },
+    "GradientBoosting": {
+      "r2": 0.6435,
+      "mae": 147035.81,
+      "rmse": 344521.51
+    }
+  },
+  "feature_importances": {
+    "car_age": 0.5895119498828683,
+    "km_driven": 0.01759733133725474,
+    "km_per_year": 0.006071622055917182,
+    "brand_BMW": 0.0066375902384816915,
+    "brand_Chevrolet": 0.011763617869306336,
+    "brand_Datsun": 0.0026699626787830117,
+    "brand_Fiat": 0.0018372003459278374,
+    "brand_Ford": 0.0005758561165951127,
+    "brand_Honda": 0.008280504848786726,
+    "brand_Hyundai": 0.00022893432842256478,
+    "brand_Mahindra": 0.0026454145158367596,
+    "brand_Maruti": 0.0091323175495994,
+    "brand_Nissan": 0.0,
+    "brand_Other": 0.01697983789851648,
+    "brand_Renault": 0.0038822114958250785,
+    "brand_Skoda": 0.0,
+    "brand_Tata": 0.041853727231707605,
+    "brand_Toyota": 0.03184697078000118,
+    "brand_Volkswagen": 0.0009565340182083342,
+    "fuel_Diesel": 0.12125279473668507,
+    "fuel_Electric": 0.0,
+    "fuel_LPG": 3.54901938878058e-05,
+    "fuel_Petrol": 0.0054792377915735095,
+    "seller_type_Individual": 0.008123146556921472,
+    "seller_type_Trustmark Dealer": 0.0001491788145586951,
+    "transmission_Manual": 0.10635790319592563,
+    "owner_Fourth & Above Owner": 0.0014725361963199132,
+    "owner_Second Owner": 0.0017485701771607722,
+    "owner_Test Drive Car": 0.0,
+    "owner_Third Owner": 0.002909559144928872
+  },
+  "stats": {
+    "total_records": 3576,
+    "min_price": 20000,
+    "max_price": 8900000,
+    "median_price": 350000,
+    "avg_price": 473975
+  }
+}
