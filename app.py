@@ -309,63 +309,80 @@ with tab_metrics:
     st.caption("Training sample size: 2,860 cars | Test holdout: 716 cars | Target transformed via np.log1p for variance stabilization.")
 
 with tab_workflow:
-    st.markdown("### 🗺️ End-to-End Project Workflow & Architecture")
+    st.markdown("### 🗺️ Visual Architecture & Project Blueprint")
+    st.markdown("Explore the complete end-to-end engineering, execution roadmap, and technology stack powering the Used Car Valuation Engine.")
     
-    # Display the generated workflow infographic
-    if os.path.exists("assets/ml_project_workflow.jpg"):
-        st.image("assets/ml_project_workflow.jpg", caption="End-to-End Machine Learning Used Car Price Prediction Pipeline Architecture", use_container_width=True)
+    wf_subtab1, wf_subtab2, wf_subtab3 = st.tabs([
+        "🎯 1. Main Goal of this Project",
+        "🏗️ 2. 5 Stages & 10 Sections Workflow",
+        "🛠️ 3. Complete Technical Stack Breakdown"
+    ])
     
-    st.markdown("""
-    #### 🎯 1. Main Goal of the Project
-    Buyers and sellers in the used car market face severe information asymmetry. The primary objective is to:
-    - Eliminate guesswork by estimating fair market prices in Indian Rupees (₹).
-    - Prevent model data leakage using encapsulated scikit-learn pipelines.
-    - Identify and quantify the strongest drivers of car depreciation (age, transmission, brand tier).
-    
-    ---
-    
-    #### 🏗️ 2. How the Project Was Built from Start to End
-    
-    1. **Data Ingestion & Integrity Validation:**  
-       Raw data from CarDekho (`car_data.csv`) loaded into Pandas. The source CSV remains immutable throughout.
-    
-    2. **Data Cleaning & Anomaly Filtering:**  
-       763 duplicate rows were eliminated (reducing rows from 4,340 to 3,577). A data entry error (a 2014 car with 1 km driven) was filtered.
-    
-    3. **Exploratory Data Analysis (EDA):**  
-       Visualized price distribution skewness, depreciation curves against manufacturing year, mileage decay, and box plots comparing fuel and transmission types.
-    
-    4. **Domain Feature Engineering:**  
-       Created `car_age` ($2020 - year$), consolidated rare brands into `Other`, engineered `km_per_year` (annual usage intensity), and normalized target prices via `np.log1p`.
-    
-    5. **Leak-Free Preprocessing Architecture:**  
-       Partitioned data (80% train / 20% test). Standardized numerics using `StandardScaler` and encoded categoricals with `OneHotEncoder(drop='first', handle_unknown='ignore')` inside a `ColumnTransformer`.
-    
-    6. **Multi-Model Training & Benchmarking:**  
-       Trained 4 distinct algorithms (Linear Regression, Ridge, Random Forest, Gradient Boosting) using strictly isolated scikit-learn pipelines.
-    
-    7. **Evaluation & Explainability:**  
-       Inverted log predictions to Rupees using `np.expm1()`. Benchmarked on test data ($R^2$, MAE, RMSE) and extracted feature importances.
-    
-    8. **Model Serialization & Interactive App:**  
-       Exported production pipelines using `joblib` and created this interactive Streamlit valuation engine with persona support.
-    
-    ---
-    
-    #### 🛠️ 3. Complete Technical Stack Breakdown
-    
-    | Stage | Library Used | Functions & Classes | Purpose & Logic |
-    |---|---|---|---|
-    | **Data Handling** | `pandas` | `pd.read_csv`, `df.drop_duplicates()`, `df.isnull().sum()`, `df.apply()` | Tabular ingestion, duplicate removal, brand extraction, summary stats. |
-    | **Math & Transforms** | `numpy` | `np.log1p()`, `np.expm1()` | Natural log-transform to compress skewed prices; exponentiation back to ₹. |
-    | **Visualizations** | `matplotlib`, `seaborn` | `plt.subplots()`, `sns.histplot()`, `sns.scatterplot()`, `sns.boxplot()`, `sns.heatmap()`, `sns.barplot()` | Distribution charts, scatter correlations, box plots, heatmap, feature importance plot. |
-    | **Preprocessing** | `scikit-learn` | `StandardScaler()`, `OneHotEncoder(drop='first')`, `ColumnTransformer()` | Normalizes numerical scales and creates dummy variables without leakage. |
-    | **Workflow Guard** | `scikit-learn` | `Pipeline()` | Chains preprocessing and model estimation; guarantees test data is never leaked. |
-    | **Validation** | `scikit-learn` | `train_test_split(random_state=42)`, `KFold()`, `cross_val_score()` | Holdout evaluation (80/20) and 5-fold cross-validation. |
-    | **Linear ML Models** | `scikit-learn` | `LinearRegression()`, `Ridge(alpha=1.0)` | Unregularized OLS baseline and L2 regularized regression (Top performer: MAE ~₹1.47 Lakhs). |
-    | **Ensemble ML Models**| `scikit-learn` | `RandomForestRegressor()`, `GradientBoostingRegressor()` | Bagged decision trees and boosted residual trees for non-linear thresholds. |
-    | **Evaluation Metrics**| `scikit-learn` | `r2_score()`, `mean_absolute_error()`, `root_mean_squared_error()` | Variance explained ($R^2$) and typical absolute price error in ₹ (MAE). |
-    | **Model Persistence** | `joblib` | `joblib.dump()`, `joblib.load()` | Serializing trained pipelines to disk for real-time web inference. |
-    | **Web Application** | `streamlit` | `st.set_page_config()`, `st.sidebar`, `st.metric()`, `st.tabs()`, `st.image()` | Interactive UI with real-time prediction and persona-specific strategy cards. |
-    """)
+    with wf_subtab1:
+        if os.path.exists("assets/project_goal_visual.jpg"):
+            st.image("assets/project_goal_visual.jpg", caption="Visual Slide: Project Goal & Core Mission (Market Problem vs. ML Solution)", use_container_width=True)
+            
+        st.markdown("""
+        #### 🎯 The Core Mission
+        Buyers and sellers in the used car market face severe **information asymmetry**:
+        - **Market Problem:**
+          - **Blind Price Guesswork:** Lack of historical price transparency.
+          - **Seller Undervaluation:** Sellers lose margin on unverified dealer trade-ins.
+          - **Buyer Overpaying Risk:** Buyers cannot objectively gauge the monetary penalty of high mileage or multiple owners.
+        - **Machine Learning Solution:**
+          - **Data-Driven Fair Market Valuation:** Predicts fair prices in Indian Rupees (₹) with test **MAE under ₹1.5 Lakhs**.
+          - **Zero Data Leakage:** Preprocessing and encodings are isolated within scikit-learn pipelines.
+          - **Objective Benchmark Pricing:** Equips **Rahul (Buyer)**, **Ananya (Seller)**, and **Vikram (Dealer)** with actionable negotiation thresholds.
+        """)
+
+    with wf_subtab2:
+        if os.path.exists("assets/five_stages_roadmap.jpg"):
+            st.image("assets/five_stages_roadmap.jpg", caption="Visual Slide: How It Was Built - 5 Stages & 10 Sections Workflow", use_container_width=True)
+            
+        st.markdown("""
+        #### 🏗️ The 5 Development Stages & 10 Notebook Sections
+        
+        1. **Stage 1: Ingestion & Cleansing (Sections 1–4)**
+           - Loaded `car_data.csv` keeping the source file immutable.
+           - Removed 763 duplicate records (17.6%) and filtered a recording anomaly (a 2014 car with 1 km driven).
+           - Preserved high-value luxury models (e.g., Audi RS7, BMW X5) rather than clipping them.
+        
+        2. **Stage 2: Exploratory Data Analysis (Section 5)**
+           - Plotted raw price distributions showing severe right skewness.
+           - Log-transformed price (`np.log1p`) into a normalized bell curve.
+           - Analyzed depreciation curves, transmission premiums, and fuel type distributions with one-line analytical findings.
+        
+        3. **Stage 3: Feature Engineering (Section 6)**
+           - Derived `car_age` ($2020 - year$).
+           - Extracted vehicle make and grouped low-frequency makes (< 25 listings) into `Other`.
+           - Engineered annual driving intensity: `km_per_year` = $km\_driven / (car\_age + 1)$.
+        
+        4. **Stage 4: Leak-Free Preprocessing & Training (Sections 7–8)**
+           - Partitioned 80% train (2,860 cars) and 20% holdout test (716 cars) with fixed seed (`random_state=42`).
+           - Built `ColumnTransformer` with `StandardScaler` for numerics and `OneHotEncoder(drop='first', handle_unknown='ignore')` for categoricals.
+           - Trained 4 candidate models: **Linear Regression**, **Ridge Regression**, **Random Forest**, and **Gradient Boosting**.
+        
+        5. **Stage 5: Evaluation & Interactive App (Sections 9–10)**
+           - Inverted log predictions to Rupees using `np.expm1()`.
+           - Evaluated $R^2$, MAE (₹), RMSE (₹), and 5-fold cross-validation.
+           - Serialized pipelines into `models/` and launched this interactive Streamlit valuation application.
+        """)
+
+    with wf_subtab3:
+        if os.path.exists("assets/tech_stack_visual.jpg"):
+            st.image("assets/tech_stack_visual.jpg", caption="Visual Slide: Complete Technical Stack Breakdown (Libraries, Functions & Algorithms)", use_container_width=True)
+            
+        st.markdown("""
+        #### 🛠️ Detailed Technology & Function Mapping
+        
+        | Layer | Technology | Key Functions & Classes | Specific Project Role |
+        |---|---|---|---|
+        | **Data Handling & Math** | `pandas`, `numpy` | `pd.read_csv`, `df.drop_duplicates()`, `df.isnull().sum()`, `df.apply()`, `np.log1p()`, `np.expm1()` | Reading data, de-duplicating 763 rows, extracting car brands, logarithmic target scaling, and inverting back to Indian Rupees. |
+        | **Data Visualization** | `matplotlib`, `seaborn` | `plt.subplots()`, `sns.histplot()`, `sns.scatterplot()`, `sns.boxplot()`, `sns.heatmap()`, `sns.barplot()` | Distribution curves, price depreciation vs. age, correlation matrices, box plots by fuel/transmission, and feature importance rankings. |
+        | **Machine Learning Engine** | `scikit-learn` | `StandardScaler()`, `OneHotEncoder(drop='first')`, `ColumnTransformer()`, `Pipeline()`, `train_test_split()`, `KFold()`, `cross_val_score()` | Feature scaling, dummy encoding, encapsulated leak-free pipeline architecture, 80/20 splitting, and 5-fold cross validation. |
+        | **Regression Algorithms** | `scikit-learn` | `LinearRegression()`, `Ridge(alpha=1.0)`, `RandomForestRegressor()`, `GradientBoostingRegressor()` | Comparing baseline OLS, L2 regularized regression (Top model: MAE ~₹1.47L), bagged tree ensembles, and sequential gradient boosting. |
+        | **Evaluation Metrics** | `scikit-learn` | `r2_score()`, `mean_absolute_error()`, `root_mean_squared_error()` | Benchmarking variance explained ($R^2$) and typical error in Indian Rupees (₹). |
+        | **Serialization & Web App** | `joblib`, `streamlit` | `joblib.dump()`, `joblib.load()`, `st.set_page_config()`, `st.sidebar`, `st.metric()`, `st.tabs()`, `st.image()` | Persisting production models to disk and rendering the responsive interactive valuation UI with persona strategies and "what-if" simulations. |
+        """)
+
 

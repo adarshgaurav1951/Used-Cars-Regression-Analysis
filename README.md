@@ -8,7 +8,10 @@ An end-to-end Machine Learning regression project and interactive valuation appl
 
 ![Machine Learning Pipeline Architecture](assets/ml_project_workflow.jpg)
 
-### 🎯 Main Goal of this Project
+### 🎯 1. Main Goal of this Project
+
+![Project Goal & Core Mission](assets/project_goal_visual.jpg)
+
 In the used car marketplace, neither buyers nor sellers have complete transparency over fair vehicle value. Price depends heavily on coupled interactions between continuous attributes (vehicle age, odometer mileage, annual usage intensity) and categorical attributes (brand tier, fuel type, transmission mechanism, ownership status). 
 
 The primary objectives of this project are:
@@ -19,7 +22,9 @@ The primary objectives of this project are:
 
 ---
 
-### 🏗️ How the Project Was Built from Start to End
+### 🏗️ 2. How the Project Was Built from Start to End
+
+![5 Stages & 10 Sections Workflow Roadmap](assets/five_stages_roadmap.jpg)
 
 ```mermaid
 graph LR
@@ -79,6 +84,27 @@ graph LR
    - **Goal:** Serialized production pipelines and metadata into `models/`. Built a responsive web app with persona-based playbooks and a "what-if" valuation sensitivity simulator.
 
 ---
+
+### 🛠️ 3. Complete Technical Stack Breakdown
+
+![Complete Technical Stack Breakdown](assets/tech_stack_visual.jpg)
+
+| Layer | Library Used | Functions & Classes | Purpose & Logic |
+|---|---|---|---|
+| **Data Handling** | `pandas` | `pd.read_csv`, `df.drop_duplicates()`, `df.isnull().sum()`, `df.apply()` | Tabular ingestion, duplicate removal, brand extraction, summary stats. |
+| **Math & Transforms** | `numpy` | `np.log1p()`, `np.expm1()` | Natural log-transform to compress skewed prices; exponentiation back to ₹. |
+| **Visualizations** | `matplotlib`, `seaborn` | `plt.subplots()`, `sns.histplot()`, `sns.scatterplot()`, `sns.boxplot()`, `sns.heatmap()`, `sns.barplot()` | Distribution charts, scatter correlations, box plots, heatmap, feature importance plot. |
+| **Preprocessing** | `scikit-learn` | `StandardScaler()`, `OneHotEncoder(drop='first')`, `ColumnTransformer()` | Normalizes numerical scales and creates dummy variables without leakage. |
+| **Workflow Guard** | `scikit-learn` | `Pipeline()` | Chains preprocessing and model estimation; guarantees test data is never leaked. |
+| **Validation** | `scikit-learn` | `train_test_split(random_state=42)`, `KFold()`, `cross_val_score()` | Holdout evaluation (80/20) and 5-fold cross-validation. |
+| **Linear ML Models** | `scikit-learn` | `LinearRegression()`, `Ridge(alpha=1.0)` | Unregularized OLS baseline and L2 regularized regression (Top performer: MAE ~₹1.47 Lakhs). |
+| **Ensemble ML Models**| `scikit-learn` | `RandomForestRegressor()`, `GradientBoostingRegressor()` | Bagged decision trees and boosted residual trees for non-linear thresholds. |
+| **Evaluation Metrics**| `scikit-learn` | `r2_score()`, `mean_absolute_error()`, `root_mean_squared_error()` | Variance explained ($R^2$) and typical absolute price error in ₹ (MAE). |
+| **Model Persistence** | `joblib` | `joblib.dump()`, `joblib.load()` | Serializing trained pipelines to disk for real-time web inference. |
+| **Web Application** | `streamlit` | `st.set_page_config()`, `st.sidebar`, `st.metric()`, `st.tabs()`, `st.image()` | Interactive UI with real-time prediction and persona-specific strategy cards. |
+
+---
+
 
 
 ## 🌟 Key Features
